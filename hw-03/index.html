@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawHub - Find Your Best Friend</title>
+
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      --color-sky-500: #0ea5e9;
+      --color-sky-600: #0284c7;
+      --color-orange-500: #f97316;
+      --color-orange-600: #ea580c;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 font-sans selection:bg-sky-200 selection:text-sky-900 overflow-x-hidden">
+
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <div class="flex-shrink-0 flex items-center">
+          <a href="#" class="flex items-center gap-3 group">
+            <div class="bg-sky-500 text-white p-2 rounded-xl group-hover:bg-sky-600 transition-colors shadow-sm">
+              <i data-lucide="paw-print" class="w-6 h-6"></i>
+            </div>
+            <span class="text-2xl font-extrabold tracking-tight text-slate-900">Paw<span
+                class="text-sky-500">Hub</span></span>
+          </a>
+        </div>
+
+        <ul class="hidden md:flex space-x-2 items-center list-none">
+          <li><a href="#"
+              class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Home</a>
+          </li>
+          <li><a href="#"
+              class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Adopt</a>
+          </li>
+          <li><a href="#"
+              class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Community</a>
+          </li>
+          <li><a href="#"
+              class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Events</a>
+          </li>
+
+          <li class="w-px h-6 bg-slate-200 mx-2"></li>
+
+          <li><a href="#"
+              class="ml-2 bg-sky-500 text-white hover:bg-sky-600 px-7 py-2.5 rounded-full font-bold transition-all shadow-sm hover:shadow hover:-translate-y-0.5">Log
+              In / Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="bg-white border-b border-slate-100 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 lg:pt-32 lg:pb-32">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+        <div class="w-full lg:w-1/2 text-center lg:text-left relative z-10">
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 text-slate-900 leading-[1.1]">
+            Find your <br class="hidden lg:block" /> new <span class="text-sky-500">best friend.</span>
+          </h1>
+          <p class="text-xl md:text-2xl text-slate-600 mb-12 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            Join the ultimate community for pet lovers. Adopt, connect, and share stories with people who care just as
+            much as you do.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <a href="#"
+              class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-full transition-all text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-center">
+              Browse Pets
+            </a>
+            <a href="#"
+              class="bg-white border-2 border-slate-200 text-slate-800 hover:border-slate-300 font-bold px-10 py-4 rounded-full transition-all text-lg shadow-sm hover:shadow text-center">
+              Join the Community
+            </a>
+          </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 relative flex justify-center lg:justify-end mt-12 lg:mt-0">
+          <div
+            class="absolute inset-0 bg-sky-100 rounded-full w-[100%] h-[100%] lg:w-[120%] lg:h-[120%] lg:-translate-x-10 translate-y-10 lg:translate-x-10 lg:-translate-y-10 z-0">
+          </div>
+          <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1000&q=80"
+            alt="Happy dog looking at camera"
+            class="rounded-[2.5rem] shadow-2xl relative z-10 w-full max-w-xl object-cover h-[400px] sm:h-[450px] lg:h-[600px] ring-4 ring-white">
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="mb-12 flex flex-col md:flex-row items-baseline justify-between">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Looking for a home</h2>
+        <p class="text-slate-500 mt-3 text-lg font-medium">These beautiful companions are waiting for you.</p>
+      </div>
+      <a href="#"
+        class="text-sky-600 font-bold hover:text-sky-700 hover:underline mt-4 md:mt-0 flex items-center gap-1 text-lg">
+        View all adoptable pets <i data-lucide="arrow-right" class="w-5 h-5 ml-1"></i>
+      </a>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <article
+        class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-[2.5rem] p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer">
+        <div class="relative overflow-hidden rounded-[2rem] h-64 mb-5 bg-slate-50">
+          <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80"
+            alt="Barnaby" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div
+            class="absolute top-4 right-4 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">
+            Adoptable</div>
+        </div>
+        <div class="px-2">
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Barnaby</h3>
+          <p class="text-slate-500 font-medium mb-5 flex items-center gap-2">
+            <i data-lucide="dog" class="w-4 h-4 text-slate-400"></i> Dog &bull; Golden Mix
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+            <span class="text-sky-600 font-bold group-hover:text-orange-500 transition-colors text-lg font-bold">Meet
+              Barnaby &rarr;</span>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-[2.5rem] p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer">
+        <div class="relative overflow-hidden rounded-[2rem] h-64 mb-5 bg-slate-50">
+          <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80"
+            alt="Luna" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div
+            class="absolute top-4 right-4 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">
+            Adoptable</div>
+        </div>
+        <div class="px-2">
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Luna</h3>
+          <p class="text-slate-500 font-medium mb-5 flex items-center gap-2">
+            <i data-lucide="cat" class="w-4 h-4 text-slate-400"></i> Cat &bull; Calico
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+            <span class="text-sky-600 font-bold group-hover:text-orange-500 transition-colors text-lg font-bold">Meet
+              Luna &rarr;</span>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-[2.5rem] p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer">
+        <div class="relative overflow-hidden rounded-[2rem] h-64 mb-5 bg-slate-50">
+          <img src="https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&w=800&q=80"
+            alt="Captain" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div
+            class="absolute top-4 right-4 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">
+            Adoptable</div>
+        </div>
+        <div class="px-2">
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Captain</h3>
+          <p class="text-slate-500 font-medium mb-5 flex items-center gap-2">
+            <i data-lucide="bird" class="w-4 h-4 text-slate-400"></i> Bird &bull; Macaw
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+            <span class="text-sky-600 font-bold group-hover:text-orange-500 transition-colors text-lg font-bold">Meet
+              Captain &rarr;</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 text-slate-500 py-12 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="paw-print" class="w-5 h-5 text-sky-500"></i>
+        <p class="text-sm font-bold text-slate-800">&copy; 2026 PawHub.</p>
+      </div>
+      <div class="flex space-x-6 text-sm font-bold">
+        <a href="#" class="hover:text-sky-500 transition-colors">Terms</a>
+        <a href="#" class="hover:text-sky-500 transition-colors">Privacy</a>
+        <a href="#" class="hover:text-sky-500 transition-colors">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>
