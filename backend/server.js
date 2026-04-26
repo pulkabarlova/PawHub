@@ -14,7 +14,6 @@ const __dirname = path.dirname(__filename);
 import petRoutes from './routes/pets.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
-import eventRoutes from './routes/events.js';
 
 dotenv.config();
 
@@ -46,7 +45,6 @@ app.use((req, res, next) => {
 app.use('/api/pets', petRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api/events', eventRoutes);
 
 // Socket.IO Connection Event
 io.on('connection', (socket) => {
@@ -60,7 +58,7 @@ io.on('connection', (socket) => {
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { seedDatabase } from './seedData.js';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 let MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pawhub';
 
 const startServer = async () => {

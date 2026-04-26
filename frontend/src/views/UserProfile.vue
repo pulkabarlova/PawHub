@@ -34,7 +34,7 @@
             </span>
             
             <div class="w-full h-56 bg-slate-50 relative overflow-hidden rounded-t-3xl">
-              <img v-if="pet.pictures && pet.pictures.length" :src="pet.pictures[0]" alt="Pet image" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" alt="Pet image" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div v-else class="h-full w-full flex items-center justify-center text-4xl text-slate-300 font-bold uppercase">{{ pet.name.charAt(0) }}</div>
             </div>
             
@@ -104,6 +104,8 @@
 import { ref, onMounted } from 'vue';
 import { useAuth } from '../composables/useAuth';
 import { PawPrintIcon, PlusIcon } from 'lucide-vue-next';
+import { apiUrl } from '../config/api';
+import { resolveMediaUrl } from '../utils/media';
 
 const { user, getHeaders, logout } = useAuth();
 
@@ -123,7 +125,7 @@ const fetchUserPets = async () => {
   if (!user.value) return;
   loading.value = true;
   try {
-    const res = await fetch('http://localhost:5000/api/pets');
+    const res = await fetch(apiUrl('/api/pets'));
     if (res.ok) {
       const allPets = await res.json();
       // Filter out pets belonging only to this user
@@ -148,7 +150,7 @@ const addPet = async () => {
       pictures: [pictureUrl]
     };
 
-    const res = await fetch('http://localhost:5000/api/pets', {
+    const res = await fetch(apiUrl('/api/pets'), {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(payload)

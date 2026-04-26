@@ -13,7 +13,7 @@
     <div v-else class="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden flex flex-col lg:flex-row">
       <!-- Pet Image Sidebar -->
       <div class="w-full lg:w-2/5 bg-slate-50 relative min-h-[400px]">
-        <img v-if="pet.pictures && pet.pictures.length" :src="pet.pictures[0]" :alt="pet.name" class="w-full h-full object-cover absolute inset-0">
+        <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" :alt="pet.name" class="w-full h-full object-cover absolute inset-0">
         <div v-else class="w-full h-full flex items-center justify-center text-7xl text-slate-300 font-bold absolute inset-0 uppercase">{{ pet.name.charAt(0) }}</div>
         
         <div class="absolute top-6 left-6">
@@ -64,6 +64,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { apiUrl } from '../config/api';
+import { resolveMediaUrl } from '../utils/media';
 
 const route = useRoute();
 const pet = ref(null);
@@ -71,7 +73,7 @@ const loading = ref(true);
 
 onMounted(async () => {
   try {
-    const res = await fetch(`http://localhost:5000/api/pets/${route.params.id}`);
+    const res = await fetch(apiUrl(`/api/pets/${route.params.id}`));
     if (res.ok) {
       pet.value = await res.json();
     }

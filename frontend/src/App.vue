@@ -19,7 +19,6 @@
             <RouterLink to="/" class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Home</RouterLink>
             <RouterLink to="/adopt" class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Adopt</RouterLink>
             <RouterLink to="/community" class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Community</RouterLink>
-            <RouterLink to="/events" class="px-4 py-2 rounded-full text-slate-600 font-bold hover:text-sky-600 hover:bg-slate-50 transition-all">Events</RouterLink>
             
             <div class="w-px h-6 bg-slate-200 mx-2"></div>
 
@@ -52,7 +51,6 @@
         <RouterLink @click="isMobileMenuOpen = false" to="/" class="block px-4 py-3 rounded-xl text-slate-700 font-bold hover:bg-slate-50 hover:text-sky-600">Home</RouterLink>
         <RouterLink @click="isMobileMenuOpen = false" to="/adopt" class="block px-4 py-3 rounded-xl text-slate-700 font-bold hover:bg-slate-50 hover:text-sky-600">Adopt</RouterLink>
         <RouterLink @click="isMobileMenuOpen = false" to="/community" class="block px-4 py-3 rounded-xl text-slate-700 font-bold hover:bg-slate-50 hover:text-sky-600">Community</RouterLink>
-        <RouterLink @click="isMobileMenuOpen = false" to="/events" class="block px-4 py-3 rounded-xl text-slate-700 font-bold hover:bg-slate-50 hover:text-sky-600">Events</RouterLink>
         
         <div class="border-t border-slate-100 my-2 pt-2"></div>
 
@@ -98,6 +96,7 @@ import { onMounted, ref } from 'vue'
 import { io } from 'socket.io-client'
 import { useAuth } from './composables/useAuth'
 import { PawPrintIcon, MenuIcon, XIcon } from 'lucide-vue-next'
+import { API_BASE_URL } from './config/api'
 
 const { isAuthenticated, user } = useAuth()
 const isMobileMenuOpen = ref(false)
@@ -105,7 +104,7 @@ const notification = ref(null)
 
 onMounted(() => {
   // Connect to backend WebSocket
-  const socket = io('http://localhost:5000')
+  const socket = io(API_BASE_URL)
 
   socket.on('new_adoption_alert', (pet) => {
     notification.value = `New pet up for adoption: ${pet.name} the ${pet.species}!`

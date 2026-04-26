@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import User from './models/User.js';
 import Pet from './models/Pet.js';
 import Post from './models/Post.js';
-import Event from './models/Event.js';
 
 export const seedDatabase = async () => {
   try {
@@ -12,7 +11,6 @@ export const seedDatabase = async () => {
     await User.deleteMany({});
     await Pet.deleteMany({});
     await Post.deleteMany({});
-    await Event.deleteMany({});
 
     // 1. Create Personas
     const users = await User.insertMany([
@@ -58,12 +56,6 @@ export const seedDatabase = async () => {
       { title: 'How to transition to a new dog food', content: 'It is important to mix the old and new food over a 7-day period to avoid stomach issues. Start with 75% old and 25% new.', authorId: vetId },
       { title: 'Success Story: Barnaby is doing great!', content: 'Just wanted to thank the shelter for matching us with Barnaby. He is loving his new yard!', authorId: bobId },
       { title: 'Best chew toys for heavy chewers?', content: 'My dog destroys everything. Any recommendations for indestructible toys? Kongs aren\'t surviving.', authorId: bobId }
-    ]);
-
-    // 4. Create Events
-    await Event.collection.insertMany([
-      { title: 'Annual Pet Adoption Drive', description: 'Come meet dozens of adoptable pets at the central park! Over 20 shelters participating.', date: new Date('2026-06-15T10:00:00Z'), location: 'Central Park', organizerId: shelterId, imageUrl: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80', createdAt: new Date(), updatedAt: new Date() },
-      { title: 'Free Rabies Vaccination Clinic', description: 'Available for the first 50 pets. Sponsored by Dr. Smith. Please ensure dogs are leashed and cats are in carriers.', date: new Date('2026-05-20T09:00:00Z'), location: 'City Vet Clinic', organizerId: vetId, imageUrl: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80', createdAt: new Date(), updatedAt: new Date() }
     ]);
 
     console.log('✅ Database seeded successfully!');

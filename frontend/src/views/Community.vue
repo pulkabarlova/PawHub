@@ -51,7 +51,7 @@
                
                <!-- Post Image Display -->
                <div v-if="post.imageUrl" class="w-full lg:w-1/3 shrink-0 relative overflow-hidden rounded-[2rem] bg-slate-100 border border-slate-100 shadow-inner max-h-64">
-                 <img :src="post.imageUrl" alt="Post attachment" class="w-full h-full object-cover">
+                 <img :src="resolveMediaUrl(post.imageUrl)" alt="Post attachment" class="w-full h-full object-cover">
                </div>
             </div>
 
@@ -69,6 +69,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useAuth } from '../composables/useAuth';
+import { apiUrl } from '../config/api';
+import { resolveMediaUrl } from '../utils/media';
 
 const posts = ref([]);
 const loading = ref(true);
@@ -81,7 +83,7 @@ const newPost = ref({ title: '', content: '' });
 const fetchPosts = async () => {
   loading.value = true;
   try {
-    const res = await fetch('http://localhost:5000/api/posts');
+    const res = await fetch(apiUrl('/api/posts'));
     if (res.ok) {
       posts.value = await res.json();
     }
@@ -95,7 +97,7 @@ const fetchPosts = async () => {
 const submitPost = async () => {
   submitting.value = true;
   try {
-    const res = await fetch('http://localhost:5000/api/posts', {
+    const res = await fetch(apiUrl('/api/posts'), {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(newPost.value)

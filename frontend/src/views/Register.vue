@@ -31,6 +31,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
+import { apiUrl } from '../config/api';
 
 const name = ref('');
 const email = ref('');
@@ -45,7 +46,7 @@ const handleRegister = async () => {
   error.value = '';
   loading.value = true;
   try {
-    const res = await fetch('http://localhost:5000/api/users/register', {
+    const res = await fetch(apiUrl('/api/users/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name.value, email: email.value, password: password.value })

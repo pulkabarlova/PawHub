@@ -62,7 +62,7 @@
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
           <article v-for="pet in featuredPets" :key="pet._id" class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer" @click="$router.push(`/pet/${pet._id}`)">
             <div class="relative overflow-hidden rounded-2xl h-64 mb-5 bg-slate-50">
-              <img v-if="pet.pictures && pet.pictures.length" :src="pet.pictures[0]" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               <div v-else class="w-full h-full flex items-center justify-center text-5xl text-slate-300 font-bold">{{ pet.name.charAt(0) }}</div>
               
               <!-- Solid status badge -->
@@ -100,7 +100,7 @@
               
               <!-- Subtle background image for visual flair if present -->
               <div v-if="post.imageUrl" class="absolute top-0 right-0 w-full h-32 opacity-20 group-hover:opacity-40 transition-opacity duration-500 overflow-hidden pointer-events-none rounded-t-3xl mask-image-b">
-                 <img :src="post.imageUrl" class="w-full h-full object-cover">
+                 <img :src="resolveMediaUrl(post.imageUrl)" class="w-full h-full object-cover">
               </div>
 
               <div class="relative z-10 flex-1">
@@ -123,6 +123,8 @@
 import { ref, onMounted } from 'vue';
 import { ArrowRightIcon, PawPrintIcon, MessageCircleIcon } from 'lucide-vue-next';
 import { useAuth } from '../composables/useAuth';
+import { apiUrl } from '../config/api';
+import { resolveMediaUrl } from '../utils/media';
 
 const { isAuthenticated } = useAuth();
 const featuredPets = ref([]);
@@ -132,7 +134,7 @@ const loadingPosts = ref(true);
 
 onMounted(async () => {
   try {
-    const petRes = await fetch('http://localhost:5000/api/pets');
+    const petRes = await fetch(apiUrl('/api/pets'));
     if (petRes.ok) {
       const data = await petRes.json();
       // Show only adoptable pets on the home page for impact
@@ -145,7 +147,7 @@ onMounted(async () => {
   }
 
   try {
-    const postRes = await fetch('http://localhost:5000/api/posts');
+    const postRes = await fetch(apiUrl('/api/posts'));
     if (postRes.ok) {
       const data = await postRes.json();
       // Reverse to get newest first, then slice

@@ -47,7 +47,7 @@
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <article v-for="pet in filteredPets" :key="pet._id" class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-[2.5rem] p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer" @click="$router.push(`/pet/${pet._id}`)">
             <div class="relative overflow-hidden rounded-[2rem] h-64 mb-5 bg-slate-50">
-              <img v-if="pet.pictures && pet.pictures.length" :src="pet.pictures[0]" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+              <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
               <div v-else class="w-full h-full flex items-center justify-center text-5xl text-slate-300 font-bold uppercase">{{ pet.name.charAt(0) }}</div>
             </div>
             <div class="px-3 pb-2 text-center">
@@ -66,6 +66,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { apiUrl } from '../config/api';
+import { resolveMediaUrl } from '../utils/media';
 
 const pets = ref([]);
 const loading = ref(true);
@@ -79,7 +81,7 @@ const filteredPets = computed(() => {
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:5000/api/pets');
+    const res = await fetch(apiUrl('/api/pets'));
     if (res.ok) {
       pets.value = await res.json();
     }

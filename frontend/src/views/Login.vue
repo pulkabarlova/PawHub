@@ -27,6 +27,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '../composables/useAuth';
+import { apiUrl } from '../config/api';
 
 const email = ref('');
 const password = ref('');
@@ -40,7 +41,7 @@ const handleLogin = async () => {
   error.value = '';
   loading.value = true;
   try {
-    const res = await fetch('http://localhost:5000/api/users/login', {
+    const res = await fetch(apiUrl('/api/users/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email.value, password: password.value })

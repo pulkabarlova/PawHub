@@ -3,7 +3,7 @@
 echo "🐾 Starting PawHub..."
 
 # 1. Start the backend in the background
-echo "-> Starting Backend API (Port 5000)..."
+echo "-> Starting Backend API (Port 5001)..."
 cd backend
 npm install
 npm start &
@@ -23,7 +23,7 @@ cd ..
 
 echo "✅ PawHub is running!"
 echo "   Frontend: http://localhost:5173"
-echo "   Backend:  http://localhost:5000"
+echo "   Backend:  http://localhost:5001"
 echo ""
 echo "Press Ctrl+C to stop all servers."
 

@@ -10,7 +10,6 @@ const router = createRouter({
     { path: '/register', name: 'register', component: () => import('../views/Register.vue') },
     { path: '/adopt', name: 'adopt', component: () => import('../views/Adoption.vue') },
     { path: '/community', name: 'community', component: () => import('../views/Community.vue') },
-    { path: '/events', name: 'events', component: () => import('../views/Events.vue') },
     { 
       path: '/profile', 
       name: 'profile', 
