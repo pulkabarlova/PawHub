@@ -45,19 +45,7 @@
           <p class="text-lg mt-2 font-medium">Try adjusting your filters to see more results.</p>
         </div>
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <article v-for="pet in filteredPets" :key="pet._id" class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-[2.5rem] p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer" @click="$router.push(`/pet/${pet._id}`)">
-            <div class="relative overflow-hidden rounded-[2rem] h-64 mb-5 bg-slate-50">
-              <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-              <div v-else class="w-full h-full flex items-center justify-center text-5xl text-slate-300 font-bold uppercase">{{ pet.name.charAt(0) }}</div>
-            </div>
-            <div class="px-3 pb-2 text-center">
-              <h3 class="text-2xl font-bold text-slate-900 mb-1">{{ pet.name }}</h3>
-              <p class="text-slate-500 font-medium mb-5">{{ pet.species }} &bull; {{ pet.breed || 'Mixed' }} &bull; {{ pet.age || '?' }} yrs</p>
-              <button class="w-full bg-sky-50 text-sky-600 font-bold py-3 rounded-xl group-hover:bg-orange-500 group-hover:text-white transition-colors text-lg">
-                Meet {{ pet.name }}
-              </button>
-            </div>
-          </article>
+          <PetCard v-for="pet in filteredPets" :key="pet._id" :pet="pet" />
         </div>
       </section>
     </div>
@@ -66,8 +54,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import PetCard from '../components/PetCard.vue';
 import { apiUrl } from '../config/api';
-import { resolveMediaUrl } from '../utils/media';
 
 const pets = ref([]);
 const loading = ref(true);

@@ -8,8 +8,11 @@
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 text-slate-900 leading-[1.1]">
               Find your <br class="hidden lg:block"/> new <span class="text-sky-500">best friend.</span>
             </h1>
-            <p class="text-xl md:text-2xl text-slate-600 mb-12 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Join the ultimate community for pet lovers. Adopt, connect, and share stories with people who care just as much as you do.
+            <p class="text-xl md:text-2xl text-slate-600 mb-6 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              PawHub helps you discover adoptable pets, connect with other pet lovers, and manage your own profile in one place.
+            </p>
+            <p class="text-base md:text-lg text-slate-500 mb-12 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              Sign in to post in the community, then browse and filter pets to find your best match faster.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <router-link to="/adopt" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-full transition-all text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-center">
@@ -60,26 +63,7 @@
           <p class="text-xl font-bold">No featured pets at the moment. Check back soon!</p>
         </div>
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-          <article v-for="pet in featuredPets" :key="pet._id" class="bg-white shadow-sm border border-slate-100 hover:shadow-xl rounded-3xl p-5 transition-all duration-300 hover:-translate-y-1.5 group cursor-pointer" @click="$router.push(`/pet/${pet._id}`)">
-            <div class="relative overflow-hidden rounded-2xl h-64 mb-5 bg-slate-50">
-              <img v-if="pet.pictures && pet.pictures.length" :src="resolveMediaUrl(pet.pictures[0])" :alt="pet.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-              <div v-else class="w-full h-full flex items-center justify-center text-5xl text-slate-300 font-bold">{{ pet.name.charAt(0) }}</div>
-              
-              <!-- Solid status badge -->
-              <div class="absolute top-4 right-4 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest px-4 py-2 rounded-full shadow-sm">
-                {{ pet.status }}
-              </div>
-            </div>
-            <div class="px-2">
-              <h3 class="text-2xl font-bold text-slate-900 mb-2">{{ pet.name }}</h3>
-              <p class="text-slate-500 font-medium mb-5 flex items-center gap-2">
-                 <PawPrintIcon class="w-4 h-4 text-slate-400" /> {{ pet.species }} &bull; {{ pet.breed || 'Mixed' }}
-              </p>
-              <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
-                 <span class="text-sky-600 font-bold group-hover:text-orange-500 transition-colors text-lg">Meet {{ pet.name }} &rarr;</span>
-              </div>
-            </div>
-          </article>
+          <PetCard v-for="pet in featuredPets" :key="pet._id" :pet="pet" variant="featured" />
         </div>
       </section>
 
@@ -121,7 +105,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { ArrowRightIcon, PawPrintIcon, MessageCircleIcon } from 'lucide-vue-next';
+import { ArrowRightIcon, MessageCircleIcon } from 'lucide-vue-next';
+import PetCard from '../components/PetCard.vue';
 import { useAuth } from '../composables/useAuth';
 import { apiUrl } from '../config/api';
 import { resolveMediaUrl } from '../utils/media';
