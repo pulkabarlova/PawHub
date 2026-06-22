@@ -1,188 +1,74 @@
 # PawHub Agent Guide
 
-This file documents how to work safely and consistently in this repository.
+How to work safely and consistently in this repository.
 
 ## Project Overview
 
 - **Type**: Full-stack monorepo (`frontend` + `backend`)
-- **Domain**: Pet adoption and community platform
-- **Frontend**: Vue 3 + Vite + Vue Router + Tailwind CSS v4
-- **Backend**: Node.js + Express + Mongoose + Socket.IO
-- **Database behavior**: Tries local MongoDB first, falls back to in-memory MongoDB and seeds data automatically
+- **Domain**: Pet adoption + community platform (adopt, community forum, events, shop, profiles)
+- **Frontend**: Vue 3 + Vite + Vue Router + Pinia + Tailwind CSS v4 (plain JS, `<script setup>`)
+- **Backend**: Node.js (ESM) + Express 5 + Mongoose + Socket.IO
+- **Database**: MongoDB. In Docker it is a real `mongo` container with a persistent volume; without `MONGO_URI` the backend falls back to an in-memory MongoDB for local dev. Seeding is **idempotent (seed-on-empty)**.
+- **Run it**: `docker compose up --build` (one click) — see `README.md`.
 
 ## Repository Layout
 
-- `README.md`: Human-facing project summary and quick start.
-- `start.sh`: One-command local startup for backend + frontend.
-- `pictures/`: Static image assets served by backend at `/pictures`.
-- `backend/`: Express API and Mongo models.
-- `frontend/`: Vue SPA.
-- `hw-03/`: Separate coursework artifact; not part of main app runtime.
+- `docker-compose.yml`: one-click stack (mongo + backend + frontend).
+- `CRITERIA.md`: course criteria mapped to where each is fulfilled.
+- `README.md`: human-facing summary and quick start.
+- `start.sh`: non-Docker local startup (backend + frontend).
+- `pictures/`: static images served by the backend at `/pictures`.
+- `.editorconfig`, `.prettierrc.json`: shared formatting (run `npm run format` in either app).
 
-### Backend Layout
+### Backend (`backend/`)
 
-- `backend/server.js`: App bootstrap, DB connection strategy, route registration, Socket.IO setup.
-- `backend/seedData.js`: Seed logic used when in-memory DB starts.
-- `backend/middleware/auth.js`: JWT auth middleware.
-- `backend/models/*.js`: Mongoose schemas (`User`, `Pet`, `Post`, `Event`).
-- `backend/routes/*.js`: Resource routers (`users`, `pets`, `posts`, `events`).
-- `backend/package.json`: Node scripts and dependencies.
+- `server.js`: thin entrypoint — builds HTTP server, `initSocket`, `connectDB`, then listens.
+- `app.js`: builds the Express app (CORS, JSON, static `/pictures`, `req.io` shim, route mounts, `notFound` + `errorHandler` last).
+- `config/db.js`: connect to `MONGO_URI` (or in-memory fallback) + `seedIfEmpty()`.
+- `config/socket.js`: `initSocket` / `getIo` / `emitAdoptionAlert` (the `new_adoption_alert` event).
+- `controllers/*.controller.js`: request-handling logic (user, pet, post, event, product).
+- `routes/*.js`: thin routers mapping verbs → controllers, wrapped in `asyncHandler`.
+- `middleware/`: `auth.js` (JWT), `asyncHandler.js`, `error.js` (`notFound` + `errorHandler`).
+- `models/*.js`: Mongoose schemas (`User`, `Pet`, `Post`, `Event`, `Product`).
+- `seed/`: `index.js` orchestrator + per-entity `*.seed.js` (passwords are bcrypt-hashed).
 
-### Frontend Layout
+### Frontend (`frontend/`)
 
-- `frontend/src/main.js`: Vue app mount and router registration.
-- `frontend/src/App.vue`: Shell layout (header/footer/mobile nav) and websocket notification listener.
-- `frontend/src/router/index.js`: Route declarations + auth navigation guard.
-- `frontend/src/composables/useAuth.js`: Shared token/user state via localStorage.
-- `frontend/src/views/*.vue`: Page-level views (Home, Login, Register, Adoption, Community, Events, UserProfile, PetProfile).
-- `frontend/src/style.css`: Tailwind entrypoint.
-- `frontend/vite.config.js`: Vite plugins for Vue + Tailwind.
-
-## Packages and Tooling
-
-### Backend Dependencies
-
-- `express`: HTTP API framework.
-- `mongoose`: MongoDB ODM.
-- `mongodb-memory-server`: Local in-memory DB fallback.
-- `socket.io`: Realtime server events.
-- `cors`: Cross-origin support.
-- `dotenv`: Environment variable loading.
-- `jsonwebtoken`: JWT generation/verification.
-- `bcryptjs`: Password hashing.
-- `nodemon` (devDependency): Auto-restart in development.
-
-### Frontend Dependencies
-
-- `vue`: Core framework.
-- `vue-router`: SPA routing and route guards.
-- `socket.io-client`: Realtime event listener from backend.
-- `lucide-vue-next`: Icon components.
-- `vite`: Build/dev server.
-- `@vitejs/plugin-vue`: Vue SFC support in Vite.
-- `tailwindcss` + `@tailwindcss/vite`: Styling system.
-
-## Commands
-
-### Unified Start
-
-From repo root:
-
-- `chmod +x start.sh` (once)
-- `./start.sh`
-
-This installs deps (both apps), starts backend on `5000`, then frontend on `5173`.
-
-### Backend
-
-From `backend/`:
-
-- `npm install`
-- `npm start` (node server)
-- `npm run dev` (nodemon)
-
-### Frontend
-
-From `frontend/`:
-
-- `npm install`
-- `npm run dev`
-- `npm run build`
-- `npm run preview`
+- `src/main.js`: bootstrap — installs **Pinia before Router**, then mounts.
+- `src/App.vue`: thin shell (`AppHeader` / `ToastNotification` / `<RouterView>` / `AppFooter`); calls `useSocket()`.
+- `src/router/`: `routes.js` (table), `guards.js` (`authGuard` reads the auth store), `index.js`.
+- `src/stores/`: Pinia — `auth.js` (token/user source of truth), `notifications.js` (toast).
+- `src/services/`: `http.js` (fetch wrapper) + per-domain services (`auth`, `users`, `pets`, `posts`, `events`, `products`).
+- `src/composables/`: `useAuth.js` (thin shim over the auth store), `useSocket.js` (Socket.IO → notifications store).
+- `src/components/`: `layout/` (header, footer), `ui/` (toast, skeleton), `pets/`, `events/`, `products/`.
+- `src/models/*.js`: JSDoc typedefs. `src/views/*.vue`: pages. `src/config/api.js`: `API_BASE_URL` / `WS_URL`. `src/utils/media.js`: `resolveMediaUrl`.
 
 ## Runtime Contracts
 
-### Backend API Base
-
-- `http://localhost:5000/api`
-
-### Routes
-
-- `/pets`
-- `/users`
-- `/posts`
-- `/events`
-
-### Auth Pattern
-
-- Login/register return JWT token.
-- Token is sent as `Authorization: Bearer <token>`.
-- Middleware reads token from header and populates `req.user`.
-- Protected endpoints currently include:
-  - `POST /api/pets`
-  - `POST /api/posts`
-  - `GET /api/users/me`
-  - `PUT /api/users/:id` (self-update only)
-
-### WebSocket Pattern
-
-- Server emits `new_adoption_alert` when a new pet is created with `status === "adoptable"`.
-- Frontend `App.vue` listens and shows temporary toast notification.
+- **API base**: `http://localhost:5001/api`. Resources: `/users`, `/pets`, `/posts`, `/events`, `/products` (+ `/health`).
+- **Auth**: login/register return a JWT; send it as `Authorization: Bearer <token>`. `auth` middleware populates `req.user` (`{ id, role }`). Protected: `POST /pets|posts|events|products`, `GET /users/me`, `PUT /users/:id` (self only).
+- **WebSocket**: server emits `new_adoption_alert` when an adoptable pet is created (`config/socket.js` → `pet.controller.js`); the frontend `useSocket` composable feeds the notifications store → `ToastNotification.vue`. **Do not rename this event without updating both sides.**
 
 ## Code Patterns to Follow
 
-### Backend Patterns
+### Backend
+- ESM only (`"type": "module"`). No CommonJS.
+- Controllers hold logic; routes stay thin and wrap handlers in `asyncHandler` (no per-handler try/catch — throw and let `errorHandler` respond).
+- Use `findByIdAndUpdate(..., { new: true, runValidators: true })` for updates.
+- Add a resource: model in `models/` → controller in `controllers/` → thin router in `routes/` → mount in `app.js` → optional seed in `seed/` (wire into `seed/index.js`).
+- Preserve the in-memory fallback and `new_adoption_alert` contract.
 
-- Use ESM imports/exports (`"type": "module"`).
-- Keep route handlers async and wrapped in `try/catch`.
-- Return JSON consistently with meaningful HTTP status codes.
-- For update operations, use `findByIdAndUpdate(..., { new: true, runValidators: true })`.
-- If route requires identity context, use `auth` middleware and rely on `req.user.id`.
-- Add new routers by:
-  1. Creating model in `backend/models`.
-  2. Creating route file in `backend/routes`.
-  3. Registering route prefix in `backend/server.js`.
+### Frontend
+- Vue SFCs with `<script setup>` + Composition API.
+- **Never call `fetch` directly in a view** — go through a service in `src/services/`. Add new endpoints there.
+- Auth/session state comes from `useAuthStore()` (or the `useAuth()` shim). Toasts via `useNotificationsStore()`.
+- Protected pages use `meta.requiresAuth`; the global `authGuard` enforces it.
+- Styling is Tailwind utilities in templates. Keep the rounded-card / bold-heading visual language.
+- Env-driven config via `import.meta.env.VITE_*` surfaced through `src/config/api.js`.
 
-### Frontend Patterns
+## Out of Scope / Caution
 
-- Use Vue SFCs with `<script setup>`.
-- Use Composition API primitives (`ref`, `computed`, `onMounted`).
-- Fetch API is used directly (no centralized API client yet).
-- Authentication state comes from `useAuth()` composable.
-- Protected pages use `meta.requiresAuth` with router guard enforcement.
-- Tailwind utility classes define almost all styling directly in templates.
-
-## File and Change Guidance for Agents
-
-- Prefer focused edits in existing modules over large rewrites.
-- Preserve existing UI style language (rounded cards, bold headings, Tailwind utilities).
-- Keep API paths and ports consistent unless intentionally introducing config support.
-- When adding authenticated requests in frontend, use `useAuth().getHeaders()`.
-- Avoid introducing CommonJS syntax; stay ESM across backend/frontend.
-- If adding new environment variables, document them in `README.md` and keep sensible local defaults.
-
-## Known Architecture Notes
-
-- DB fallback logic is core behavior: do not remove in-memory fallback unless requested.
-- `pictures/` is served statically; image URLs may be absolute URLs or local `/pictures/...` paths.
-- `useAuth` stores state in module-scope refs + localStorage; this is shared app-wide.
-- API base URLs are hardcoded to `http://localhost:5000` in views; consider centralizing only if requested.
-
-## Quick Task Playbooks
-
-### Add a New Backend Resource
-
-1. Add Mongoose schema in `backend/models`.
-2. Add CRUD router in `backend/routes`.
-3. Mount route in `backend/server.js`.
-4. Seed sample data if needed in `backend/seedData.js`.
-
-### Add a New Frontend Page
-
-1. Create view in `frontend/src/views`.
-2. Register route in `frontend/src/router/index.js`.
-3. Add navigation entry in `frontend/src/App.vue` if user-facing.
-4. Use existing card/section style patterns for visual consistency.
-
-### Add an Authenticated Client Action
-
-1. Read token via `useAuth()`.
-2. Send `Authorization` header with `getHeaders()`.
-3. Handle non-OK responses by reading `{ error }` payload.
-
-## Out of Scope / Caution Areas
-
-- Do not commit `.env` secrets.
-- Do not assume local MongoDB is available.
-- Do not break WebSocket event name `new_adoption_alert` without updating both server and client.
-- Do not modify `hw-03` unless task explicitly asks for it.
+- Don't commit `.env` secrets (only `.env.example` / public `VITE_` values).
+- Don't remove the in-memory DB fallback or break `seedIfEmpty` idempotency.
+- Don't rename `new_adoption_alert` without updating server + client.
+- Keep ports consistent (backend 5001, frontend 5173) unless intentionally adding config.

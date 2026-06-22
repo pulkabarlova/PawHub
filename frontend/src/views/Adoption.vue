@@ -2,7 +2,9 @@
   <div class="py-12 px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[1400px] mx-auto">
     <header class="text-center mb-16">
       <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Adopt a Pet</h1>
-      <p class="mt-4 text-xl text-slate-500 font-medium max-w-2xl mx-auto">Give a loving home to a pet in need. Browse our available companions below.</p>
+      <p class="mt-4 text-xl text-slate-500 font-medium max-w-2xl mx-auto">
+        Give a loving home to a pet in need. Browse our available companions below.
+      </p>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -10,11 +12,14 @@
       <aside class="lg:col-span-1">
         <div class="bg-white p-8 rounded-[3rem] shadow-sm border border-slate-100 sticky top-28">
           <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Filters</h2>
-          
+
           <div class="space-y-6">
             <div>
               <label class="block text-sm font-bold text-slate-700 mb-3">Species</label>
-              <select v-model="filterSpecies" class="block w-full rounded-2xl border-slate-200 shadow-sm focus:border-sky-500 focus:ring-sky-500 px-5 py-4 border bg-slate-50 font-medium">
+              <select
+                v-model="filterSpecies"
+                class="block w-full rounded-2xl border-slate-200 shadow-sm focus:border-sky-500 focus:ring-sky-500 px-5 py-4 border bg-slate-50 font-medium"
+              >
                 <option value="">All Species</option>
                 <option value="Dog">Dogs</option>
                 <option value="Cat">Cats</option>
@@ -22,8 +27,11 @@
                 <option value="Other">Other</option>
               </select>
             </div>
-            
-            <button @click="filterSpecies = ''" class="w-full bg-slate-100 text-slate-700 px-4 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors mt-4">
+
+            <button
+              @click="filterSpecies = ''"
+              class="w-full bg-slate-100 text-slate-700 px-4 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors mt-4"
+            >
               Reset Filters
             </button>
           </div>
@@ -33,14 +41,21 @@
       <!-- Pet Grid -->
       <section class="lg:col-span-3">
         <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-           <!-- Skeleton Loader -->
-           <div v-for="i in 6" :key="i" class="bg-white rounded-[2.5rem] p-5 shadow-sm border border-slate-100 animate-pulse">
-             <div class="bg-slate-100 h-64 rounded-[2rem] mb-5"></div>
-             <div class="h-6 bg-slate-100 w-1/2 rounded mb-3"></div>
-             <div class="h-4 bg-slate-100 w-1/3 rounded"></div>
-           </div>
+          <!-- Skeleton Loader -->
+          <div
+            v-for="i in 6"
+            :key="i"
+            class="bg-white rounded-[2.5rem] p-5 shadow-sm border border-slate-100 animate-pulse"
+          >
+            <div class="bg-slate-100 h-64 rounded-[2rem] mb-5"></div>
+            <div class="h-6 bg-slate-100 w-1/2 rounded mb-3"></div>
+            <div class="h-4 bg-slate-100 w-1/3 rounded"></div>
+          </div>
         </div>
-        <div v-else-if="filteredPets.length === 0" class="bg-slate-50 p-16 text-center rounded-[3rem] border border-slate-100 text-slate-500">
+        <div
+          v-else-if="filteredPets.length === 0"
+          class="bg-slate-50 p-16 text-center rounded-[3rem] border border-slate-100 text-slate-500"
+        >
           <p class="text-2xl font-bold text-slate-700">No pets found.</p>
           <p class="text-lg mt-2 font-medium">Try adjusting your filters to see more results.</p>
         </div>
@@ -54,25 +69,22 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import PetCard from '../components/PetCard.vue';
-import { apiUrl } from '../config/api';
+import PetCard from '../components/pets/PetCard.vue';
+import { petsService } from '../services/pets.service';
 
 const pets = ref([]);
 const loading = ref(true);
 const filterSpecies = ref('');
 
 const filteredPets = computed(() => {
-  let result = pets.value.filter(p => p.status === 'adoptable'); // Only show adoptable pets here
-  if (!filterSpecies.value) return result;
-  return result.filter(p => p.species?.toLowerCase() === filterSpecies.value.toLowerCase());
+  const adoptable = pets.value.filter((p) => p.status === 'adoptable'); // only adoptable pets here
+  if (!filterSpecies.value) return adoptable;
+  return adoptable.filter((p) => p.species?.toLowerCase() === filterSpecies.value.toLowerCase());
 });
 
 onMounted(async () => {
   try {
-    const res = await fetch(apiUrl('/api/pets'));
-    if (res.ok) {
-      pets.value = await res.json();
-    }
+    pets.value = await petsService.list();
   } catch (err) {
     console.error('Failed to fetch pets:', err);
   } finally {

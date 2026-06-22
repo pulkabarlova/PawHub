@@ -1,0 +1,108 @@
+PawHub — Website Description
+============================
+
+WHAT KIND OF WEBSITE PAWHUB IS
+------------------------------
+
+PawHub is a pet adoption + pet-owner community platform — a single mission with
+two halves:
+
+1. Adoption marketplace — shelters list animals (dogs, cats, birds) as
+   `adoptable`; the public browses and filters them and views detailed pet
+   profiles. Owners can also flag a pet as `lost`.
+
+2. Social community — registered users post photos and discussion threads,
+   manage their own profile, and register their own pets.
+
+It is a full-stack SPA:
+  - Frontend: Vue 3 + Vite + Vue Router + Tailwind CSS v4
+  - Backend:  Node.js + Express + Mongoose + Socket.IO
+  - Database: MongoDB, with a zero-setup in-memory fallback that auto-seeds
+              sample data on startup.
+
+Standout interactive feature: a real-time WebSocket toast. When a shelter posts
+a new adoptable pet, every connected browser instantly gets a "New pet up for
+adoption!" notification (event name: `new_adoption_alert`).
+
+User roles (defined in the data model):
+  - owner   (regular pet owner)
+  - shelter (e.g. "Happy Paws Rescue")
+  - vet     (e.g. "Dr. Emily Smith")
+
+Auth is JWT-based with a route guard protecting the profile page.
+
+
+THE PAGES (WHAT IS ACTUALLY BUILT)
+----------------------------------
+
+Seven routes are wired in frontend/src/router/index.js:
+
+  /            Home          Marketing landing — hero ("Find your new best
+                             friend"), CTAs to Browse Pets / Join Community.
+                             Public.
+
+  /adopt       Adoption      Browsable pet grid with a species filter sidebar
+                             (Dog/Cat/Bird/Other) + skeleton loaders.
+                             Public.
+
+  /pet/:id     Pet Profile   Full detail for one animal — photo, breed/age,
+                             health notes, adoptable/adopted status.
+                             Public.
+
+  /community   Community     Discussion forum — post list with photos; logged-in
+                             users get a "Create New Post" form.
+                             Public read, posting requires auth.
+
+  /profile     User Profile  "My Pets" management + the user's own info; add and
+                             manage your pets.
+                             Requires login (route guard).
+
+  /login       Login         Email/password sign-in -> JWT.
+                             Public.
+
+  /register    Register      Create account -> JWT.
+                             Public.
+
+The shell (App.vue) wraps all pages with a sticky header (logo + nav:
+Home / Adopt / Community / auth button), a responsive mobile hamburger menu,
+the global notification toast, and a footer.
+
+
+DATA MODELS (BACKEND)
+---------------------
+
+Three Mongoose models only:
+
+  User  — name, email, passwordHash, role (owner|shelter|vet), profilePicture,
+          preferences
+  Pet   — name, species, breed, age, healthNotes,
+          status (owned|adoptable|lost), ownerId, pictures[]
+  Post  — title, content, imageUrl, authorId
+
+Three route files: users, pets, posts.
+
+
+DOCS VS. REALITY (IMPORTANT)
+----------------------------
+
+README.md and agents.md claim 5 data models plus pages for Events and
+Market/Products. Those DO NOT EXIST in the working code:
+
+  - Real models: User, Pet, Post  (no Event, no Product)
+  - Real routes: users, pets, posts  (no events/products endpoints)
+  - No Events or Market pages in the router
+
+So the README is aspirational/inflated relative to the working code. The genuine
+scope is: Adoption + Community + Profiles + Auth.
+
+
+TECH STACK SUMMARY
+------------------
+
+Frontend: Vue 3 (Composition API), Vite, Vue Router 4, Tailwind CSS v4,
+          socket.io-client, lucide-vue-next (icons)
+Backend:  Node.js, Express 5, Mongoose, socket.io, jsonwebtoken, bcryptjs,
+          cors, dotenv, mongodb-memory-server (in-memory fallback)
+
+Run locally: ./start.sh  (frontend on http://localhost:5173, backend on
+http://localhost:5000)

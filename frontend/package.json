@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:e2e": "node e2e-flow.mjs"
   },
   "dependencies": {
     "lucide-vue-next": "^1.0.0",
+    "pinia": "^2.2.6",
     "socket.io-client": "^4.8.3",
     "vue": "^3.5.32",
     "vue-router": "^4.6.4"
@@ -17,7 +21,12 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/test-utils": "^2.4.11",
+    "jsdom": "^29.1.1",
+    "playwright": "^1.61.0",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4.2.2",
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "vitest": "^4.1.9"
   }
 }
